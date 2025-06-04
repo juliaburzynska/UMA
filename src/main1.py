@@ -29,7 +29,7 @@ def mutate_adaptive(population, best, fitness):
         if fitness[i] < avg_fitness:
             # Dobry osobnik → eksploatacja
             strategy = 'best'
-            F = 0.5  # Mniejsze F dla lepszej lokalnej optymalizacji
+            F = 0.5
         else:
             # Słabszy osobnik → eksploracja
             strategy = np.random.choice(['rand', 'rand-to-best'])
@@ -71,12 +71,14 @@ def bounds_check(children, best_individual):
 
 def differential_evolution(func, func_name):
     global strategy_prob, F_prob
-
+    perturbation_count = 0
+    
     population = np.random.uniform(LOWER_BOUND, UPPER_BOUND, size=(POP_SIZE, DIMENSION))
     fitness = func(population)
 
     best_overall = np.min(fitness)
     no_improvement_count = 0
+    last_best_value = best_overall
 
     for generation in range(GENERATIONS):
         current_best = np.min(fitness)
@@ -89,12 +91,24 @@ def differential_evolution(func, func_name):
 
         # Jeśli długo nie ma poprawy - zwiększamy rozrzut osobników
         if no_improvement_count > PATIENCE:
+            print("Rozrzut osobników został zwiększony.")
+            perturbation_count += 1
+
+            if abs(best_overall - last_best_value) < TOLERANCE:
+                if perturbation_count >= 4:
+                    print("Brak postępu po 4 rozrzutach.")
+                    break
+            else:
+                perturbation_count = 0
+
+            last_best_value = best_overall
+
             best_idx = np.argmin(fitness)
             best_individual = population[best_idx]
 
             noise = np.random.uniform(-5, 5, size=population.shape)
             population = np.clip(population + noise, LOWER_BOUND, UPPER_BOUND)
-            population[best_idx] = best_individual  # Zachowaj najlepszego
+            population[best_idx] = best_individual
 
             # Odśwież wartości fitness
             fitness = func(population)
@@ -104,8 +118,6 @@ def differential_evolution(func, func_name):
             # Zwiększ entropię wyboru strategii/F
             strategy_prob = np.ones(len(strategies)) / len(strategies)
             F_prob = np.ones(len(F_values)) / len(F_values)
-
-            print("Rozrzut osobników został zwiększony.")
 
         best_idx = np.argmin(fitness)
         best_individual = population[best_idx]
