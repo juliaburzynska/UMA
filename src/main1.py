@@ -8,6 +8,7 @@ POP_SIZE = 500
 CR = 0.6
 PATIENCE = 50  # Liczba generacji bez poprawy
 GENERATIONS = 1000
+TOLERANCE = 1e-4
 SELECTED_FUNCTIONS = ['f1', 'f2','f3','f4','f5','f6', 'f7','f8','f9','f10','f11','f12','f13','f14', 'f15','f16','f17','f18','f19',
                       'f20','f21','f22','f23','f24', 'f25','f26','f27','f28','f29', 'f30']
 
@@ -80,7 +81,7 @@ def differential_evolution(func, func_name):
     for generation in range(GENERATIONS):
         current_best = np.min(fitness)
 
-        if current_best < best_overall:
+        if current_best < best_overall - TOLERANCE:
             best_overall = current_best
             no_improvement_count = 0
         else:
