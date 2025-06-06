@@ -1,11 +1,11 @@
 import numpy as np
 from cec2017 import functions
 from itertools import product
-# from logger import Logger
+from logger import Logger
 import sys
 import matplotlib.pyplot as plt
 
-# sys.stdout = Logger("logZf10.txt")
+sys.stdout = Logger("logZf10.txt")
 
 OPTIMUM_VALUES = {
     f'f{i}': 100.0 * i for i in range(1, 31)
