@@ -41,7 +41,7 @@ DISTANCE_BINS = np.arange(0, 250 + DISTANCE_BIN_SIZE, DISTANCE_BIN_SIZE)
 SUCCESS_BINS = np.arange(0, 1 + SUCCESS_BIN_SIZE, SUCCESS_BIN_SIZE)
 
 STRATEGIES = ['rand', 'best', 'rand-to-best', 'rand/2', 'rand/3', 'best/2', 'current-to-best']
-F_STEP = 0.25
+F_STEP = 0.1
 F_VALUES = np.arange(F_STEP, 1.0 + F_STEP, F_STEP).round(3).tolist()
 
 ACTIONS = list(product(range(len(STRATEGIES)), range(len(F_VALUES))))
