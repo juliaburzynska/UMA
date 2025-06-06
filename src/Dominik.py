@@ -1,6 +1,12 @@
 import numpy as np
 from cec2017 import functions
 from itertools import product
+from logger import Logger
+import sys
+
+
+sys.stdout = Logger("log600.txt")
+
 
 OPTIMUM_VALUES = {
     'f1': 100.0, 'f2': 200.0, 'f3': 300.0, 'f4': 400.0, 'f5': 500.0,
@@ -12,17 +18,18 @@ OPTIMUM_VALUES = {
 }
 
 DIM = 10
-POP_SIZE = 500
+POP_SIZE = 600
 LOWER, UPPER = -100, 100
 CR = 0.9
-GENERATIONS = 1500
+GENERATIONS = 2000
 EVAL_WINDOW = 20
 
 SELECTED_FUNCTIONS = ['f1', 'f3', 'f6', 'f7', 'f10', 'f13', 'f16', 'f20', 'f23', 'f24', 'f27']
 
-ALPHA = 0.3
+
+ALPHA = 0.2
 GAMMA = 0.9
-EPSILON = 0.11
+EPSILON = 0.2
 
 SUCCESS_BIN_SIZE = 0.1
 DISTANCE_BIN_SIZE = 20
@@ -143,8 +150,8 @@ def differential_evolution(func, func_name, optimum=None):
 
             if optimum is not None:
                 best_val = np.min(next_fitness)
-                if best_val <= optimum + 0.0001:
-                    print(f"{func_name} | Gen  {gen} | Osiągnięto optimum: {best_val:.5f} <= {optimum:.5f} + 0.0001")
+                if best_val <= optimum + 0.5:
+                    print(f"{func_name} | Gen  {gen} | Osiągnięto optimum: {best_val:.5f} <= {optimum:.5f} + 0.05")
                     break
 
         pop = np.array(next_pop)
@@ -156,15 +163,17 @@ def differential_evolution(func, func_name, optimum=None):
         worst_val = np.max(fitness)
         if gen % 100 == 0 or gen == GENERATIONS - 1:
             print(f"{func_name} | Gen {gen:>4} | Best: {best_val:.5f} | Worst: {worst_val:.5f}")
-
+            if abs(best_val - worst_val) < 0.001:
+                print(f"{func_name} | Gen {gen} | Różnica między najlepszym a najgorszym < 0.001, przerywam.")
+                break
     return np.min(fitness)
 
-
-for fname in SELECTED_FUNCTIONS:
-    print("\n" + "=" * 60)
-    print(f"Optymalizacja funkcji: {fname}")
-    func = getattr(functions, fname)
-    optimum = OPTIMUM_VALUES.get(fname, None)
-    best_result = differential_evolution(func, fname, optimum)
-    print(f"Najlepszy wynik: {best_result:.6f}")
-    print("=" * 60)
+for i in range(10):
+    for fname in SELECTED_FUNCTIONS:
+        print("\n" + "=" * 60)
+        print(f"Optymalizacja funkcji: {fname}")
+        func = getattr(functions, fname)
+        optimum = OPTIMUM_VALUES.get(fname, None)
+        best_result = differential_evolution(func, fname, optimum)
+        print(f"Najlepszy wynik: {best_result:.6f}")
+        print("=" * 60)
