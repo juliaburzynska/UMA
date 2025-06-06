@@ -25,7 +25,7 @@ EXPLORATION_RUNS = 300
 EXPLORATION_CONFIG = {
     "epsilon": 0.9,
     "pop_size": 200,
-    "generations": 1000,  # zmienione max_generations
+    "generations": 500,  # zmienione max_generations
 }
 
 EXPLOITATION_RUNS = 20
