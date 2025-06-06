@@ -169,7 +169,7 @@ def differential_evolution(func, func_name, Q, config, optimum=None):
             total_count = 0
 
         # Powolny spadek epsilon dla eksploracji
-        epsilon = max(0.1, epsilon * 0.996)
+        epsilon = max(0.1, epsilon * 0.997)
 
         pop = np.array(next_pop)
         fitness = np.array(next_fitness)
