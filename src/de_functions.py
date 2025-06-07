@@ -54,15 +54,23 @@ def differential_evolution(func, func_name, run_num):
 
     print(f"\n{func_name} | Run {run_num}")
 
+    # Trackers
+    best_fitness_history = []
+    total_successes = 0
+    total_attempts = 0
+
     for gen in range(DE_CONFIG["generations"]):
         new_pop = []
         new_fitness = []
 
+        successes = 0
+        total = 0
+
         for i in range(DE_CONFIG["pop_size"]):
             # Mutation
-            mutant = mutate(pop, best_idx, i, MUTATION_STRATEGY, F_VALUE)
+            mutant = mutate(pop, best_individual, i, MUTATION_STRATEGY, F_VALUE)
 
-            # Crossover (uses global CR)
+            # Crossover
             trial = crossover(pop[i], mutant)
 
             # Apply boundaries
@@ -75,17 +83,27 @@ def differential_evolution(func, func_name, run_num):
             if f < fitness[i]:
                 new_pop.append(trial)
                 new_fitness.append(f)
+                successes += 1
             else:
                 new_pop.append(pop[i])
                 new_fitness.append(fitness[i])
+
+            total += 1
 
         # Update population and fitness values
         pop = np.array(new_pop)
         fitness = np.array(new_fitness)
         best_idx = np.argmin(fitness)
+        best_individual = pop[best_idx]
         best_val = fitness[best_idx]
 
-        # Check if optimum is reached (if known)
+        # Save best fitness for convergence detection
+        current_best_fitness = best_val
+        best_fitness_history.append(current_best_fitness)
+
+        total_successes += successes
+        total_attempts += total
+
         if optimum is not None:
             if best_val <= optimum + 0.0001:
                 print(
@@ -93,8 +111,9 @@ def differential_evolution(func, func_name, run_num):
                 )
                 break
 
-        # Logging every 100 generations or at the last one
         if gen % 100 == 0 or gen == DE_CONFIG["generations"] - 1:
-            print(f'{func_name} | Generation {gen}: best = {best_val:.4f}')
+            print(f'{func_name} | Generation {gen}: best = {current_best_fitness:.4f}')
 
-    return best_val
+    success_rate = total_successes / total_attempts if total_attempts > 0 else 0.0
+
+    return best_val, success_rate

@@ -1,8 +1,6 @@
 from config import *
-import inspect
 from de_functions import *
 
-caller_file = inspect.stack()[1].filename
 
 def discretize_state(success_rate, avg_distance):
     s_idx = np.digitize(success_rate, SUCCESS_BINS) - 1
@@ -25,7 +23,7 @@ def evaluate_distance(pop):
     return np.mean(dists)
 
 
-def differential_evolution_qlearning(func, func_name, Q, config, optimum=None):
+def differential_evolution_qlearning(func, func_name, Q, config, optimum=None, caller_name=None):
     epsilon = config['epsilon']
     pop_size = config['pop_size']
     generations = config['generations']
@@ -37,6 +35,8 @@ def differential_evolution_qlearning(func, func_name, Q, config, optimum=None):
 
     success_count = 0
     total_count = 0
+
+    best_fitness_history = []
 
     for gen in range(generations):
         next_pop = []
@@ -73,6 +73,9 @@ def differential_evolution_qlearning(func, func_name, Q, config, optimum=None):
 
             total += 1
 
+        current_best_fitness = np.min(fitness)
+        best_fitness_history.append(current_best_fitness)
+
         success_count += successes
         total_count += total
 
@@ -87,7 +90,7 @@ def differential_evolution_qlearning(func, func_name, Q, config, optimum=None):
             total_count = 0
 
         # Gradual decay of epsilon for exploration
-        if "exploration.py" in caller_file:
+        if "exploration.py" in caller_name:
             epsilon = max(0.1, epsilon * 0.997)
 
         pop = np.array(next_pop)
@@ -95,11 +98,11 @@ def differential_evolution_qlearning(func, func_name, Q, config, optimum=None):
         best_idx = np.argmin(fitness)
         best = pop[best_idx]
 
-        if "exploitation.py" in caller_file:
+        if "exploitation.py" in caller_name:
             if optimum is not None:
                 best_val = np.min(next_fitness)
                 if best_val <= optimum + 0.0001:
-                    print(f"{func_name} | Gen  {gen} | Optimum reached: {best_val:.5f} <= {optimum:.5f} + 0.0001")
+                    print(f"{func_name} | Gen  {gen} | Optimum reached: {best_val:.5f} <= {optimum:.5f} + 0.000001")
                     break
 
         best_val = np.min(fitness)
@@ -107,4 +110,5 @@ def differential_evolution_qlearning(func, func_name, Q, config, optimum=None):
         if gen % 100 == 0 or gen == generations - 1:
             print(f"{func_name} | Gen {gen:>4} | Best: {best_val:.5f} | Worst: {worst_val:.5f}")
 
-    return np.min(fitness)
+    total_success_rate = success_count / total_count if total_count > 0 else 0.0
+    return np.min(fitness), total_success_rate

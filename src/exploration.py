@@ -15,7 +15,7 @@ for fname in SELECTED_FUNCTIONS:
 
     for run in range(EXPLORATION_RUNS):
         print(f"\n--- Exploration {run + 1}/{EXPLORATION_RUNS} ---")
-        differential_evolution_qlearning(func, fname, Q_global, config=EXPLORATION_CONFIG, optimum=optimum)
+        differential_evolution_qlearning(func, fname, Q_global, config=EXPLORATION_CONFIG, optimum=optimum, caller_name="exploration.py")
         coverage = 100.0 * len(visited_states) / ((len(SUCCESS_BINS) - 1) * (len(DISTANCE_BINS) - 1))
         print(f"State space coverage after run {run + 1}: {coverage:.2f}%")
 
