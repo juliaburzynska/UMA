@@ -95,11 +95,12 @@ def differential_evolution_qlearning(func, func_name, Q, config, optimum=None):
         best_idx = np.argmin(fitness)
         best = pop[best_idx]
 
-        if optimum is not None:
-            best_val = np.min(next_fitness)
-            if best_val <= optimum + 0.0001:
-                print(f"{func_name} | Gen  {gen} | Optimum reached: {best_val:.5f} <= {optimum:.5f} + 0.0001")
-                break
+        if "exploitation.py" in caller_file:
+            if optimum is not None:
+                best_val = np.min(next_fitness)
+                if best_val <= optimum + 0.0001:
+                    print(f"{func_name} | Gen  {gen} | Optimum reached: {best_val:.5f} <= {optimum:.5f} + 0.0001")
+                    break
 
         best_val = np.min(fitness)
         worst_val = np.max(fitness)
