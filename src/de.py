@@ -3,7 +3,7 @@ from de_functions import differential_evolution
 
 
 def de():
-    all_results = []
+    all_results = {}
     for func_name in SELECTED_FUNCTIONS:
         sys.stdout = Logger(f"logs/de___{func_name}.txt")
         func = getattr(functions, func_name)
@@ -23,8 +23,8 @@ def de():
         mean_success_rate = np.mean(success_rates)
 
         print(f"\n{func_name} | Summary over {DE_RUNS} runs:")
-        print(f"Mean best value: {mean_best_fitness:.6f}")
-        print(f"Std deviation:   {std_best_fitness:.6f}")
+        print(f"Mean best fitness: {mean_best_fitness:.6f}")
+        print(f"Standard deviation of best fitness:   {std_best_fitness:.6f}")
         print(f"Mean mutation success rate: {mean_success_rate:.4f}")
 
         all_results[func_name] = {

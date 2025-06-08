@@ -7,15 +7,15 @@ from de import de
 from config import q_file, SELECTED_FUNCTIONS
 import json
 
-for func_name in SELECTED_FUNCTIONS:
-    de_results = de()
-    q_results = exploitation()
-    q_results_with_q_table = exploitation(q_file)
+de_results = de()
+q_results = exploitation()
+q_results_with_q_table = exploitation(q_file)
 
+for func_name in SELECTED_FUNCTIONS:
     full_results = {
-        "DE": de_results,
-        "Q-Learning": q_results,
-        "Q-learning-with-q-table": q_results_with_q_table
+        "DE": de_results[func_name],
+        "Q-Learning": q_results[func_name],
+        "Q-learning-with-q-table": q_results_with_q_table[func_name]
     }
 
     with open(f"results/experiment_results_{func_name}", 'w') as f:
