@@ -38,7 +38,6 @@ for func_name in SELECTED_FUNCTIONS:
     plt.savefig(f"plots/fitness_comparison_{func_name}.png")
     plt.close()
 
-    # Wykres 2: Procent sukcesów mutacji
     plt.figure(figsize=(8, 5))
     plt.bar(x, success_rates, capsize=5, color=sns.color_palette("muted", len(methods)))
     plt.xticks(x, methods)

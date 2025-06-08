@@ -6,7 +6,7 @@ from logger import Logger
 
 q_file = f"q_tables/q_table_multi_function.npy"
 
-SELECTED_FUNCTIONS = ['f1', 'f7', 'f14']
+SELECTED_FUNCTIONS = ['f16','f25'] #, 'f7', 'f14'
 
 OPTIMUM_VALUES = {
     f'f{i}': 100.0 * i for i in range(1, 31)
@@ -46,7 +46,7 @@ EXPLOITATION_RUNS = 25
 EXPLOITATION_CONFIG = {
     "epsilon": 0.1,
     "pop_size": 100,
-    "generations": 600,
+    "generations": 1000,
 }
 
 #Q-learning
