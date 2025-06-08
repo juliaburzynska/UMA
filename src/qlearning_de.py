@@ -86,8 +86,6 @@ def differential_evolution_qlearning(func, func_name, Q, config, optimum=None, c
             max_future_q = np.max(Q[new_state])
             s_idx, d_idx = state
             Q[s_idx, d_idx, action_idx] += ALPHA * (reward + GAMMA * max_future_q - Q[s_idx, d_idx, action_idx])
-            success_count = 0
-            total_count = 0
 
         # Gradual decay of epsilon for exploration
         if "exploration.py" in caller_name:

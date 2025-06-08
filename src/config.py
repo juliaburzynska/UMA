@@ -4,7 +4,9 @@ import numpy as np
 from cec2017 import functions
 from logger import Logger
 
-SELECTED_FUNCTIONS = ['f1']
+q_file = f"q_tables/q_table_multi_function.npy"
+
+SELECTED_FUNCTIONS = ['f1', 'f7', 'f14', 'f16', 'f25']
 
 OPTIMUM_VALUES = {
     f'f{i}': 100.0 * i for i in range(1, 31)
@@ -20,14 +22,14 @@ GAMMA = 0.9
 
 
 #Differential evolution
-MUTATION_STRATEGY = "rand/1"
-F_VALUE = 0.5
+MUTATION_STRATEGY = "best/1"
+F_VALUE = 0.7
 
 DE_RUNS = 20
 DE_CONFIG = {
     "epsilon": 0.1,
     "pop_size": 100,
-    "generations": 2000,
+    "generations": 1000,
 }
 
 #Q-learning - exploration
@@ -37,19 +39,24 @@ EXPLORATION_CONFIG = {
     "pop_size": 200,
     "generations": 500,
 }
+EXPLORATION_FUNCTIONS = ['f3', 'f10', 'f15', 'f20', 'f22']
 
 #Q-learning - exploitation
 EXPLOITATION_RUNS = 20
 EXPLOITATION_CONFIG = {
     "epsilon": 0.1,
     "pop_size": 100,
-    "generations": 2000,
+    "generations": 600,
 }
 
 #Q-learning
-SUCCESS_BIN_SIZE = 0.01
-DISTANCE_BIN_SIZE = 1
-DISTANCE_BINS = np.arange(0, 250 + DISTANCE_BIN_SIZE, DISTANCE_BIN_SIZE)
+SUCCESS_BIN_SIZE = 0.05
+DISTANCE_BINS = np.array([
+    0.0,
+    0.2, 0.5, 1.0, 2.0, 4.0, 8.0,
+    15.0, 30.0, 60.0, 100.0,
+    150.0, 200.0, 250.0, 300.0
+])
 SUCCESS_BINS = np.arange(0, 1 + SUCCESS_BIN_SIZE, SUCCESS_BIN_SIZE)
 
 STRATEGIES = ['rand/1', 'best/1', 'rand-to-best/1', 'rand/2', 'rand/3', 'best/2', 'current-to-best/1']
